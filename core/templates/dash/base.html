@@ -1,9 +1,17 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="description" content="Application de gestion des employés AKO Group">
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <link rel="apple-touch-icon" href="{% static 'apple-icon.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'favicon-32x32.png' %}">
+    
     <!-- Boxicons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
@@ -804,7 +812,7 @@
         }
     </style>
 
-    <title>AdminHub - Contact Messages</title>
+    <title>AKO Formulaire Employé</title>
 </head>
 <body>
     <!-- SIDEBAR -->
@@ -960,6 +968,21 @@ window.addEventListener('click', function (e) {
         menu.style.display = 'none';
       });
     });            
+    </script>
+
+    <!-- PWA Script -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('{% static "sw.js" %}')
+                    .then(function(registration) {
+                        console.log('Service Worker registered successfully:', registration);
+                    })
+                    .catch(function(error) {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
     </script>
 
 </body>
