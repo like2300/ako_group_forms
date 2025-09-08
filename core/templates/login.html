@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion | AKO Groupe</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+             body {
+            font-family: 'Inter', sans-serif;
+            background: url('https://i.pinimg.com/1200x/13/26/14/1326149a590a3765c73c0847d10929cc.jpg');
+            background-repeat: no-repeat; 
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="card w-full max-w-sm shadow-xl bg-white p-6">
+        <h1 class="text-2xl font-bold text-center mb-4">Connexion</h1>
+        <form method="post" class="flex flex-col gap-4">
+            {% csrf_token %}
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">Nom d'utilisateur</span>
+                </label>
+                <input type="text" name="username" placeholder="Nom d'utilisateur" class="input input-bordered" required>
+            </div>
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">Mot de passe</span>
+                </label>
+               
+                    <input type="password" name="password" placeholder="Mot de passe" class="input input-bordered" required>
+                
+            </div>
+            <div class="form-control">
+                <button type="submit" class="btn btn-primary">Connexion</button>
+            </div>
+        </form>
+<br>
+          <button  onclick="window.location.href='{% url 'home' %}'" class="btn mt-6 btn-outline btn-primary">Retour à l'accueil</button>
+
+
+    </div>
+</body> 
+</html>

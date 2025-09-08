@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AKO Groupe | Formulaire Employé</title>
+    <!-- Tailwind CSS avec DaisyUI -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: url('https://i.pinimg.com/1200x/13/26/14/1326149a590a3765c73c0847d10929cc.jpg');
+            background-repeat: no-repeat; 
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #6df163, #65c3f9);
+            border-radius: 1rem;
+        }
+        .logo-text {
+            font-size: 5rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .form-step {
+            display: none;
+        }
+        .form-step.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .step-indicator {
+            transition: all 0.3s ease;
+        }
+        /* Animation de succès */
+        .success-checkmark {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+        }
+        .success-checkmark .check-icon {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            border-radius: 50%;
+            box-sizing: content-box;
+            border: 4px solid #4CAF50;
+        }
+        .success-checkmark .check-icon .icon-line {
+            height: 5px;
+            background-color: #4CAF50;
+            display: block;
+            border-radius: 2px;
+            position: absolute;
+            z-index: 10;
+        }
+        .success-checkmark .check-icon .icon-line.line-tip {
+            top: 46px;
+            left: 14px;
+            width: 25px;
+            transform: rotate(45deg);
+            animation: icon-line-tip 0.75s;
+        }
+        .success-checkmark .check-icon .icon-line.line-long {
+            top: 38px;
+            right: 8px;
+            width: 47px;
+            transform: rotate(-45deg);
+            animation: icon-line-long 0.75s;
+        }
+        .success-checkmark .check-icon .icon-circle {
+            top: -4px;
+            left: -4px;
+            z-index: 10;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            position: absolute;
+            box-sizing: content-box;
+            border: 4px solid rgba(76, 175, 80, 0.5);
+        }
+        .success-checkmark .check-icon .icon-fix {
+            top: 8px;
+            width: 5px;
+            left: 26px;
+            z-index: 1;
+            height: 85px;
+            position: absolute;
+            transform: rotate(-45deg);
+            background-color: #ffffff;
+        }
+        @keyframes icon-line-tip {
+            0% { width: 0; left: 1px; top: 19px; }
+            54% { width: 0; left: 1px; top: 19px; }
+            70% { width: 50px; left: -8px; top: 37px; }
+            84% { width: 17px; left: 21px; top: 48px; }
+            100% { width: 25px; left: 14px; top: 45px; }
+        }
+        @keyframes icon-line-long {
+            0% { width: 0; right: 46px; top: 54px; }
+            65% { width: 0; right: 46px; top: 54px; }
+            84% { width: 55px; right: 0px; top: 35px; }
+            100% { width: 47px; right: 8px; top: 38px; }
+        }
+        /* Overlay pour la modale */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+        .error-message {
+            color: #e53e3e;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 md:p-8"> 
+    <div class="w-full max-w-6xl flex flex-col lg:flex-row items-center  justify-center gap-8 md:gap-12 backdrop-blur-lg"> 
+        <!-- Logo AKO pour les grands écrans -->
+        <div class="hidden lg:flex flex-1 logo-container h-[500px]">
+            <div class="text-center p-8">
+                <div class="logo-text">AKO Groupe</div>
+                <p class="text-white text-xl mt-4 font-light">Formulaire des employés</p>
+            </div>
+        </div>
+        
+        <!-- Formulaire -->
+        <div class="form-container p-6 md:p-8 w-full lg:max-w-md">
+           
+            <form method="POST" class="flex flex-col gap-5" id="employeeForm"> 
+                {% csrf_token %}
+                
+                <!-- Étape 1 -->
+                <div class="form-step active" id="step1">
+                    <div class="form-control">
+                        <label for="name" class="label">
+                            <span class="label-text">Nom complet</span>
+                        </label>
+                        <input type="text" id="name" name="name" placeholder="Votre nom" required
+                               class="input input-bordered w-full focus:input-primary">
+                    </div>
+
+                    <div class="form-control">
+                        <label for="email" class="label">
+                            <span class="label-text">Adresse email</span>
+                        </label>
+                        <input type="email" id="email" name="email" placeholder="exemple@ako.com" required
+                               class="input input-bordered w-full focus:input-primary">
+                    </div>
+                    
+                    <div class="flex justify-end mt-6">
+                        <button type="button" class="next-btn btn btn-primary">
+                            Suivant <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Étape 2 -->
+                <div class="form-step" id="step2">
+                    <div class="form-control">
+                        <label for="phone" class="label">
+                            <span class="label-text">Téléphone</span>
+                        </label>
+                        <input type="tel" id="phone" name="phone" placeholder="+242 000 000 000" required
+                               class="input input-bordered w-full focus:input-primary">
+                    </div>
+
+                    <div class="form-control">
+                        <label for="department" class="label">
+                            <span class="label-text">Département</span>
+                        </label>
+                        <select id="department" name="department" required
+                                class="select select-bordered w-full focus:select-primary">
+                            <option value="">Sélectionnez un département</option>
+                                {% for dept in departments %}
+                                    <option value="{{ dept.name }}">{{ dept.name }}</option>
+                                {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="flex justify-between mt-6">
+                        <button type="button" class="prev-btn btn btn-outline btn-neutral">
+                            <i class="fas fa-arrow-left mr-2"></i> Précédent
+                        </button>
+                        <button type="button" class="next-btn btn btn-primary">
+                            Suivant <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Étape 3 -->
+                <div class="form-step" id="step3">
+                     <div class="form-control">
+                        <label for="poste" class="label">
+                            <span class="label-text">Poste</span>
+                        </label>
+                        <select id="poste" name="poste" required
+                                class="select select-bordered w-full focus:select-primary">
+                            <option value="">Sélectionnez un poste</option>
+                             {% for post in posts %}
+                                <option value="{{ post.name }}">{{ post.name }}</option>
+                             {% endfor %}
+                        </select>
+                    </div>
+                    
+
+                      <div class="form-control">
+                        <label for="message" class="label">
+                            <span class="label-text">Statut</span>
+                        </label>
+                        <select id="message" name="message" required
+                                class="select select-bordered w-full focus:select-primary">
+                            <option value="">Sélectionnez un statut</option>
+                            <option value="Present">Present ✅</option>
+                            <option value="En pause">En pause ✅</option>
+                            <option value="Fin de travail">Fin de travail ✅</option> 
+                        </select>
+                    </div>
+                    
+                    
+                    <div class="flex justify-between mt-6">
+                        <button type="button" class="prev-btn btn btn-outline btn-neutral">
+                            <i class="fas fa-arrow-left mr-2"></i> Précédent
+                        </button>
+                        <button type="submit" class="btn btn-success" id="submitBtn">
+                            <i class="fas fa-paper-plane mr-2"></i> Envoyer
+                        </button>
+                    </div>
+                </div>
+            </form>
+            
+            <!-- Indicateur de progression -->
+            <div class="flex justify-center mt-8 space-x-3">
+                <div class="h-3 w-3 rounded-full step-indicator bg-primary" data-step="1"></div>
+                <div class="h-3 w-3 rounded-full step-indicator bg-gray-300" data-step="2"></div>
+                <div class="h-3 w-3 rounded-full step-indicator bg-gray-300" data-step="3"></div>
+            </div> <br>
+             <center>
+                <h1>Bienvenue sur AKO Groupe -- <a href="{% url 'config' %}">Configuration</a></h1>
+            </center>
+        </div>
+    </div>
+ 
+   
+
+    <!-- Overlay et modale de succès -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-box bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4">
+            <div class="success-checkmark">
+                <div class="check-icon">
+                    <span class="icon-line line-tip"></span>
+                    <span class="icon-line line-long"></span>
+                    <div class="icon-circle"></div>
+                    <div class="icon-fix"></div>
+                </div>
+            </div>
+            <h3 class="font-bold text-2xl text-center text-gray-800 mt-6">Formulaire soumis avec succès!</h3>
+            <p class="py-4 text-center text-gray-600">
+               
+            </p>
+            <div class="modal-action justify-center">
+                <button id="closeModal" class="btn btn-primary">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const formSteps = document.querySelectorAll('.form-step');
+    const stepIndicators = document.querySelectorAll('.step-indicator');
+    const form = document.getElementById('employeeForm');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const closeModalBtn = document.getElementById('closeModal');
+    let currentStep = 0;
+
+    // Fonction pour récupérer le token CSRF
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+    // Afficher la première étape
+    showStep(currentStep);
+
+    // Gestion des boutons Suivant
+    document.querySelectorAll('.next-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const currentStepElem = formSteps[currentStep];
+            const inputs = currentStepElem.querySelectorAll('input, select');
+            let isValid = true;
+
+            inputs.forEach(input => {
+                removeError(input);
+                if (!input.value.trim()) {
+                    isValid = false;
+                    showError(input, 'Ce champ est obligatoire');
+                } else if (input.type === 'email' && !isValidEmail(input.value)) {
+                    isValid = false;
+                    showError(input, 'Veuillez entrer un email valide');
+                }
+            });
+
+            if (isValid) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        });
+    });
+
+    // Gestion des boutons Précédent
+    document.querySelectorAll('.prev-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            currentStep--;
+            showStep(currentStep);
+        });
+    });
+
+    function showStep(stepIndex) {
+        formSteps.forEach(step => step.classList.remove('active'));
+        formSteps[stepIndex].classList.add('active');
+
+        stepIndicators.forEach((indicator, index) => {
+            indicator.classList.remove('bg-gray-300', 'bg-primary');
+            indicator.classList.add(index <= stepIndex ? 'bg-primary' : 'bg-gray-300');
+        });
+    }
+
+    function showError(input, message) {
+        input.classList.add('input-error');
+        const errorMsg = document.createElement('p');
+        errorMsg.className = 'error-message';
+        errorMsg.textContent = message;
+        input.parentNode.appendChild(errorMsg);
+    }
+
+    function removeError(input) {
+        input.classList.remove('input-error');
+        const existingError = input.parentNode.querySelector('.error-message');
+        if (existingError) existingError.remove();
+    }
+
+    function isValidEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    // Gestion de la soumission du formulaire
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Validation de la dernière étape
+        const currentStepElem = formSteps[currentStep];
+        const inputs = currentStepElem.querySelectorAll('input, select');
+        let isValid = true;
+
+        inputs.forEach(input => {
+            removeError(input);
+            if (!input.value.trim()) {
+                isValid = false;
+                showError(input, 'Ce champ est obligatoire');
+            }
+        });
+
+        if (!isValid) {
+            return;
+        }
+
+        // Validation de toutes les étapes
+        let allValid = true;
+        const allInputs = form.querySelectorAll('input[required], select[required]');
+        
+        allInputs.forEach(input => {
+            removeError(input);
+            if (!input.value.trim()) {
+                allValid = false;
+                // Afficher l'étape contenant le champ vide
+                for (let i = 0; i < formSteps.length; i++) {
+                    if (formSteps[i].contains(input)) {
+                        currentStep = i;
+                        showStep(currentStep);
+                        showError(input, 'Ce champ est obligatoire');
+                        break;
+                    }
+                }
+            }
+        });
+
+        if (!allValid) {
+            return;
+        }
+
+        // Récupérer les données du formulaire
+        const formData = new FormData(form);
+
+        // Afficher l'état de chargement
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Envoi en cours...';
+
+        // Envoyer les données via AJAX
+        fetch('{% url "formulaire" %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Afficher la modale de succès
+                modalOverlay.classList.add('active');
+                // Réinitialiser le formulaire
+                form.reset();
+                // Réinitialiser les étapes
+                currentStep = 0;
+                showStep(currentStep);
+            } else {
+                alert('Erreur lors de l\'envoi: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            alert('Erreur réseau. Veuillez réessayer.');
+        })
+        .finally(() => {
+            // Réactiver le bouton
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Envoyer';
+        });
+    });
+
+    // Fermer la modale
+    closeModalBtn.addEventListener('click', function() {
+        modalOverlay.classList.remove('active');
+    });
+
+    // Fermer la modale en cliquant à l'extérieur
+    modalOverlay.addEventListener('click', function(e) {
+        if (e.target === modalOverlay) {
+            modalOverlay.classList.remove('active');
+        }
+    });
+});
+</script>
+
+ 
+</body>
+</html>

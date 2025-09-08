@@ -1,0 +1,138 @@
+{% extends 'dash/base.html' %}
+{% block content %}
+
+	
+	<!-- CONTENT -->
+	<section id="content">
+		<!-- NAVBAR -->
+<nav>
+    <i class='bx bx-menu bx-sm' ></i>
+    <a href="#" class="nav-link">Categories</a>
+    <form action="#">
+        <div class="form-input">
+            <input type="search" placeholder="Search...">
+            <button type="submit" class="search-btn"><i class='bx bx-search' ></i></button>
+        </div>
+    </form>
+    <input type="checkbox" class="checkbox" id="switch-mode" hidden />
+    <label class="swith-lm" for="switch-mode">
+        <i class="bx bxs-moon"></i>
+        <i class="bx bx-sun"></i>
+        <div class="ball"></div>
+    </label>
+
+    
+ 
+
+    <!-- Profile Menu -->
+    <a href="#" class="profile" id="profileIcon">
+        <img src="https://ui-avatars.com/api/?name={{ request.user.username }}" alt="Profile">
+    </a>
+    <div class="profile-menu" id="profileMenu">
+        <ul> 
+            <li><a href="{% url 'logout' %}">Log Out</a></li>
+        </ul>
+    </div>
+</nav>
+<!-- NAVBAR -->
+
+
+		<!-- MAIN -->
+		<main>
+			<div class="head-title">
+				<div class="left">
+					<h1>Dashboard</h1>
+					<ul class="breadcrumb">
+						<li>
+							<a href="#">Dashboard</a>
+						</li>
+						<li><i class='bx bx-chevron-right' ></i></li>
+						<li>
+							<a class="active" href="#">Home</a>
+						</li>
+					</ul>
+				</div>
+				<a href="{% url 'exportcsv' %}" class="btn-download">
+					<i class='bx bxs-cloud-download bx-fade-down-hover' ></i>
+					<span class="text">Get PDF</span>
+				</a>
+			</div>
+
+			<ul class="box-info">
+				<li>
+					<i class='bx bxs-calendar-check' ></i>
+					<span class="text">
+						<h3>{{ mbPresence }}</h3>
+						<p>Total </p>
+					</span>
+				</li>
+				<li>
+					<i class='bx bxs-group' ></i>
+					<span class="text">
+						<h3>{{ mbAbsence }}</h3>
+						<p> Fin de travail</p>
+					</span>
+				</li>
+			 
+			</ul>
+
+
+			<div class="table-data">
+				<div class="order">
+					<div class="head">
+						<h3>Recent Orders</h3>
+						<i class='bx bx-search' ></i>
+						<i class='bx bx-filter' ></i>
+					</div>
+					<table>
+						<thead>
+							<tr>
+								<th>Nom</th>
+								<th> Date</th>
+								<th>Status</th>
+                                <th> ip</th>
+                                <th> device</th>
+                                
+							</tr>
+						</thead>
+						<tbody>
+							  
+							{% for useradd in useradds %}
+                            <tr>
+								<td>
+                                    <!-- avatar lettre du nom de la  personne -->
+									<img src="https://ui-avatars.com/api/?name={{ useradd.name }}">
+									<p>{{ useradd.name }}</p> 
+								</td>
+								<td>{{ useradd.created_at }}</td>
+								<td><span class="status completed"> {{ useradd.status }}</span></td>
+                                <td>{{ useradd.ip }}</td>
+                                <td>{{ useradd.user_agent|slice:":10" }}</td>
+							</tr>
+                            {% endfor %}
+						</tbody>
+					</table>
+				</div>
+				 
+			</div>
+		</main>
+		<!-- MAIN -->
+	</section>
+	<!-- CONTENT -->
+
+
+
+    <script>
+        // is mobiel device desactvi content hinner indisponible sur mobiel et l'ecran tro petit pour le contenu
+        if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|BB10|Opera Mini|IEMobile|Windows Phone)/)) {
+            document.getElementById("desktop-content").style.display = "none";
+        }
+
+        if (window.innerWidth < 768) {
+            document.getElementById("mobile-content").style.display = "none";
+        }
+      
+    
+
+    </script>
+{% endblock %}
